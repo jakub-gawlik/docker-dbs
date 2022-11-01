@@ -1,0 +1,39 @@
+version: '2.0'
+
+services:
+  nginx:
+    build: ./nginx/
+    ports:
+      - 80:80
+    volumes:
+      - '${PROJECT_ROOT}:/var/www/html:z'
+    depends_on:
+      - php
+  php:
+    build: ./php/
+    expose:
+      - 9000
+    volumes:
+      - '${PROJECT_ROOT}:/var/www/html:z'
+    depends_on:
+      - db
+  adminer:
+    build: ./adminer/
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+  db:
+    image: mysql:5.7.22
+    restart: always
+    volumes:
+      - ./mysql:/etc/mysql/conf.d:z
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 26677
+        hard: 46677
