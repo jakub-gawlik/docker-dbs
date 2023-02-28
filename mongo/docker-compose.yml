@@ -3,7 +3,7 @@ services:
   mongo:
     image: mongo:5.0
     container_name: mongo
-    restart: unless-stopped
+    restart: on-failure
     ports:
       - '27017:27017'
     volumes:
@@ -16,6 +16,6 @@ services:
     #- ME_CONFIG_BASICAUTH_PASSWORD=admin
     links:
       - mongo
-    restart: unless-stopped
+    restart: on-failure
     ports:
       - '8081:8081'
