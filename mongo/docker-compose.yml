@@ -1,21 +1,11 @@
-version: '3.8'
 services:
-  mongo:
+  db:
+    container_name: 'mongodb'
     image: mongo:latest
-    container_name: mongo
-    restart: on-failure
     ports:
-      - '27017:27017'
+      - 27017:27017
     volumes:
-      - ./database/db:/data/db
-  #mongo-express:
-  #  image: mongo-express
-  #  container_name: mongo-express
-  #  # environment:
-  #  #- ME_CONFIG_BASICAUTH_USERNAME=admin
-  #  #- ME_CONFIG_BASICAUTH_PASSWORD=admin
-  #  links:
-  #    - mongo
-  #  restart: on-failure
-  #  ports:
-  #    - '8081:8081'
+      - mongodata:/data/db
+
+volumes:
+  mongodata:
