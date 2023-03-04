@@ -1,39 +1,42 @@
-version: '2.0'
-
 services:
-  nginx:
-    build: ./nginx/
-    ports:
-      - 80:80
-    volumes:
-      - '${PROJECT_ROOT}:/var/www/html:z'
-    depends_on:
-      - php
-  php:
-    build: ./php/
-    expose:
-      - 9000
-    volumes:
-      - '${PROJECT_ROOT}:/var/www/html:z'
-    depends_on:
-      - db
-  adminer:
-    build: ./adminer/
-    restart: on-failure
-    ports:
-      - 8080:8080
-    volumes:
-      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-  db:
-    image: mysql:5.7.22
-    restart: on-failure
-    volumes:
-      - ./mysql:/etc/mysql/conf.d:z
-      - ./data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 26677
-        hard: 46677
+    php:
+        build: ./config/php
+        container_name: 'lema-php'
+        expose:
+            - 9000
+        depends_on:
+            - mariadb
+        volumes:
+            - '../:/var/www/html:z'
+            - ./config/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+
+    nginx:
+        build: ./config/nginx
+        container_name: lema-nginx
+        environment:
+            PROXY_READ_TIMEOUT: '120s'
+        ports:
+            - 80:80
+        links:
+            - 'php'
+        volumes:
+            - '../:/var/www/html:z'
+
+    mariadb:
+        image: mariadb:latest
+        container_name: lema-mariadb
+        restart: 'on-failure'
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpass
+        volumes:
+            - ./DBDATA:/var/lib/mysql
+
+    adminer:
+        image: adminer:latest
+        restart: on-failure
+        environment:
+            ADMINER_DESIGN: pepa-linha
+        ports:
+            - 8080:8080
+        volumes:
+            - ./config/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
