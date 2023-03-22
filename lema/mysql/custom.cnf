@@ -1,0 +1,7 @@
+[mysqld]
+max_allowed_packet=32M
+server-id        = 256
+binlog_format    = row
+log_bin          = /var/log/mysql/mysql-bin.log
+expire_logs_days = 10
+max_binlog_size  = 100M
