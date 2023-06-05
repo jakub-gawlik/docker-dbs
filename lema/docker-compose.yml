@@ -19,14 +19,14 @@ services:
       - db
   adminer:
     build: ./adminer/
-    restart: always
+    restart: 'on-failure'
     ports:
       - 8080:8080
     volumes:
       - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
   db:
     image: mysql:5.7.22
-    restart: always
+    restart: 'on-failure'
     volumes:
       - ./mysql:/etc/mysql/conf.d:z
       - ./data:/var/lib/mysql
