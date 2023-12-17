@@ -4,7 +4,7 @@ services:
   nginx:
     build: ./nginx/
     ports:
-      - 80:80
+      - 81:80
     volumes:
       - '../../:/var/www/html:z'
     depends_on:
@@ -27,6 +27,8 @@ services:
   db:
     image: mysql:5.7.22
     restart: 'on-failure'
+    ports:
+      - 3307:3306
     volumes:
       - ./mysql:/etc/mysql/conf.d:z
       - ./data:/var/lib/mysql
