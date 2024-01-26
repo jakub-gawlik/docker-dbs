@@ -9,6 +9,8 @@ services:
       - '../../:/var/www/html:z'
     depends_on:
       - php
+    networks:
+      - sail
   php:
     build: ./php/
     expose:
@@ -17,6 +19,8 @@ services:
       - '../../:/var/www/html:z'
     depends_on:
       - db
+    networks:
+      - sail
   adminer:
     build: ./adminer/
     restart: 'on-failure'
@@ -24,6 +28,8 @@ services:
       - 8080:8080
     volumes:
       - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    networks:
+      - sail
   db:
     image: mysql:5.7.22
     restart: 'on-failure'
@@ -34,8 +40,14 @@ services:
       - ./data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 123456
+    networks:
+      - sail
     ulimits:
       nproc: 65535
       nofile:
         soft: 26677
         hard: 46677
+
+networks:
+    sail:
+        external: true
