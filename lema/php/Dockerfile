@@ -9,3 +9,9 @@ RUN mkdir -p /app/files && \
             zip \
 	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
       && docker-php-ext-install gd pdo_mysql zip
+
+# Copy your custom PHP configuration file into the container
+COPY uploads.ini /usr/local/etc/php/conf.d/
+
+# Ensure the PHP-FPM service uses the updated configuration
+RUN chmod 644 /usr/local/etc/php/conf.d/uploads.ini
